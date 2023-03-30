@@ -1,3 +1,4 @@
-[Home](/)
-
-[Python](Python/basics)
+- [C语言](C语言/)
+  - [基础知识](C语言/基础知识.md)
+- [Python](Python/)
+  - [基础语法](Python/基础语法.md)

@@ -1,2 +1,4 @@
-# learning-record
-learning-record
+- [docs](docs/)
+  - [Python](docs/Python/)
+    - [basics](docs/Python/basics.md)
+  - [_coverpage](docs/_coverpage.md)
