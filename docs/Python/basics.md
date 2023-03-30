@@ -1,5 +1,7 @@
 # Python基础语法
 
+[TOC]
+
 ## 列表
 
 ```python
