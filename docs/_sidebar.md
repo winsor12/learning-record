@@ -1,3 +1,3 @@
-[首页](zh-cn/) 
+[Home](/)
 
 [Python](Python/basics)
