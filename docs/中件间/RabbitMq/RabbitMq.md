@@ -44,4 +44,6 @@ channel.basicQos(1);
 
 设置消费者最多处理多少条消息。
 
-![image-20230402010643229](D:\Projects\gitCode\learning-record\docs\image\image-20230402010643229.png)
+![image-20230402010643229](https://ibb.co/BGLCLXj)
+
+![image-20230402012057680](D:\Projects\gitCode\learning-record\docs\image\image-20230402012057680.png)
