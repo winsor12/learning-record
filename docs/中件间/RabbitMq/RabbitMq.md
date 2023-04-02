@@ -10,40 +10,71 @@
 
 ## Work Queues
 
+![Work Queues](https://i.328888.xyz/2023/04/02/iHtc7z.png)
+
 工作队列（任务队列），是一种消息队列模式的实现方式，用于在分布式系统中处理耗时的任务和大量的工作。生产者发布任务到消息队列，多个消费者之间进行分配。
 
 每个消息只能有一个消费者处理。
 
 工作队列的主要优点是可以通过水平扩展消费者的数量来实现更高的并发处理能力，同时也能实现任务的`负载均衡`和`故障恢复`。
 
-### 循环调度
+### 循环调度（Round-robin dispatching）
 
 默认情况下，RabbitMq会按顺序平均将消息分配给消费者。例如，有消费者c1、c2、c3,同时有消息q1、q2、q3，RabbitMq会将q1分配给c1，q2分配给c2，q3分配给c3。
 
-### 消息确认
+### 消息确认（Message acknowledgment）
 
 一个消费者A如果死亡，那么它处理的消息也会丢失。消息队列如果没有等到消费者A返回的ack，会认为消息没有被处理，会进行重新排队。若此时有其它消费者B在线，则会将消息重新发送给消费者B。如果消息队列收到消费者传来的确认消息，表明消息已接收，则可以自由删除消息。
 
-### 消息耐久性
+### 消息耐久性（Message durability）
 
 若RabbitMq服务器停止，则消息还是会丢失。
 
-```
+```java
 channel.queueDeclare("hello", true, false, false, null);
 ```
 
 其中第二个参数可以设置持久性。
 
-### 公平分配
+### 公平分配（Fair dispatch）
 
-防止出现一个消费者一直处理重消息，另一个消费者只处理轻消息。
+防止出现一个消费者一直处理任务重的消息，另一个消费者只处理任务轻的消息。
 
-```
+```java
 channel.basicQos(1);
 ```
 
-设置消费者最多处理多少条消息。
+设置消费者最多接收多少条消息。消费者在接收到队列里的消息但没有返回确认结果之前,队列不会将新的消息分发给该消费者。
 
-![image-20230402010643229](https://ibb.co/BGLCLXj)
+如下图，消息队列中有消息1，2，3，4，按照循环调度，WorkerA获得1，3消息，WorkerB获得2，4消息，但WorkerB处理2的时间较长，且设置了消费者最多同时接收一条消息，所以编号为4的消息分配给了WorkerA。
 
-![image-20230402012057680](D:\Projects\gitCode\learning-record\docs\image\image-20230402012057680.png)
+`WorkerA`
+
+![WorkerA](https://i.328888.xyz/2023/04/02/iHtDsH.png)
+
+`WorkerB`
+
+![WorkerB](https://i.328888.xyz/2023/04/02/iHtAcF.png)
+
+## Publish/Subscribe
+
+向多个消费者发送消息，发布订阅模式。
+
+![Publish/Subscribe](https://i.328888.xyz/2023/04/02/iHWihV.png)
+
+相比于工作队列多了一个交换机(exchange)，多个队列绑定到交换机上。生产者将消息发送到交换机，再由交换机路由到绑定的一个或多个队列中。
+
+`临时队列`一种自动删除的队列，它是一个短暂存在的队列，当消费者断开连接时自动删除。
+
+```java
+String queueName = channel.queueDeclare().getQueue();
+```
+
+![](https://i.328888.xyz/2023/04/02/iHt9IQ.png)
+
+![](https://i.328888.xyz/2023/04/02/iHt1WJ.png)
+
+## 路由模式（Routing）
+
+
+
