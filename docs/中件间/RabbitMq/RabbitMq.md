@@ -121,5 +121,22 @@ Topic模式是一种高级的路由模式，它可以根据消息的路由键和
 
 ##  AMQP
 
+[AMQP模型解析](http://rabbitmq.mr-ping.com/AMQP/AMQP_0-9-1_Model_Explained.html)
+
 AMQP（高级消息队列协议）是一个网络协议。它支持符合要求的客户端应用（application）和消息中间件代理（messaging middleware broker）之间进行通信。
 
+### 交换机
+
+- Direct exchange（直连交换机）
+- Direct exchange（直连交换机）
+- Topic exchange（主题交换机）
+
+### 默认交换机
+
+由消息代理预先声明的没有名字的直连交换机（Direct），每个新建队列（queue）都会自动绑定到默认交换机上，绑定的路由键（routing key）名称与队列名称相同。
+
+## Java客户端
+
+> RabbitMQ Java 客户端使用`com.rabbitmq.client`作为它的顶级包。
+
+[RabbitMq中文文档](http://rabbitmq.mr-ping.com/ClientDocumentation/java-api-guide.html)
