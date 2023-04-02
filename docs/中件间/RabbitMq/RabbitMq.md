@@ -78,3 +78,48 @@ String queueName = channel.queueDeclare().getQueue();
 
 
 
+![Routing](https://i.328888.xyz/2023/04/02/iHRVnH.png)
+
+RabbitMq有三种常见的路由模式：
+
+- Fanout：消息通过交换机发送给所有绑定的队列，所有绑定的队列都能接收到消息。
+- Direct：当消息的路由键与队列绑定的绑定键相同时，消息才会发送到该队列。
+- Topic：与Direct类似，但Topic可以通过通配符进行路由键匹配。
+
+```java
+channel.queueBind(QUEUE_NAME, EXCHANGE_NAME, ROUTING_KEY);
+```
+
+在Java中，绑定队列时可以通过`ROUTING_KEY`参数进行路由键绑定。
+
+```java
+channel.basicPublish(EXCHANGE_NAME, ROUTING_KEY, null, message.getBytes());
+```
+
+发送消息时，同样可以通过`ROUTING_KEY`赋予消息路由键。
+
+## Topic
+
+Topic模式是一种高级的路由模式，它可以根据消息的路由键和通配符将消息路由到多个队列中。
+
+![Topic](https://i.328888.xyz/2023/04/02/iHRPWA.png)
+
+`*`可以代替一个单词
+
+`#`可以代替零个或多个单词
+
+- `quick.orange.pig`:将匹配`*.orange.*`,发送到Q1队列；
+- `quick.orange.rabbit`：将匹配`*.orange.*`和`*.*.rabbit`,发送到Q1和Q2队列；
+- `orange`或`quick.orange.new.rabbit`：没有匹配的绑定键；
+- `lazy.orange.new.rabbit`：将匹配`layz.#`，`#`可以代替零个或多个单词，所以即时lazy后接多个单词也是匹配的。而`*.orange.*`是用`*`，只能代替一个单词，所以不匹配。
+
+## 远程过程调用（Remote procedure call (RPC)）
+
+在RPC模式中，客户端发送请求消息时，需要指定一个唯一的回调队列名称，并在消息中包含这个队列名称，服务器在处理完请求后，将响应消息发送回这个回调队列。客户端在发送请求消息后，会一直等待接收回调队列中的响应消息。
+
+![](https://i.328888.xyz/2023/04/02/iHpwcF.png)
+
+##  AMQP
+
+AMQP（高级消息队列协议）是一个网络协议。它支持符合要求的客户端应用（application）和消息中间件代理（messaging middleware broker）之间进行通信。
+
